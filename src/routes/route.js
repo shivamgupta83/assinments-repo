@@ -1,46 +1,82 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/students/:name', function(req, res) {
-    let studentName = req.params.name
-    const {age}=req.query
-    console.log(studentName)
-    res.send(studentName)
-})
+let player =
+[
+    {
+        "name": "manish",
+        "dob": "1/1/1995",
+        "gender": "male",
+        "city": "jalandhar",
+        "sports": [
+            "swimming"
+        ]
+    },
+    {
+        "name": "gopal",
+        "dob": "1/09/1995",
+        "gender": "male",
+        "city": "delhi",
+        "sports": [
+            "soccer"
+        ]
+    },
+    {
+        "name": "lokesh",
+        "dob": "1/1/1990",
+        "gender": "male",
+        "city": "mumbai",
+        "sports": [
+            "soccer"
+        ]
+    }
+]
 
- 
-router.post("/test-post1" , function(req, res) {
-    res.send({a:56, b: 45})
-})
-
-  
-
-
-router.post("/test-post-2", function(req, res) {
-    res.send(  { msg: "hi" , status: true }  )
-})
-
-router.post("/test-post-3", function(req, res) {
-    // let id = req.body.user
-    // let pwd= req.body.password
-
-    // console.log( id , pwd)
-
-    console.log( req.body )
-
-    res.send(  { msg: "hi" , status: true }  )
-})
 
 
 
-router.post("/test-post-4", function(req, res) {
-    let arr= [ 12, "functionup"]
-    let ele= req.body.element
-    console.log(ele)
+router.post("/player", function(req, res) {
+let r=req.body
+let data = req.body.name
+for(let a=0;a<player.length;a++){
+
+    if(player[a].name!==data){
+     player.push(r)
+    return res.send(player) ;
      
-    arr.push(ele)
-    console.log(res)
-    res.send(  { msg: arr , status: true }  )
-})
+    }
+    else {
+       return res.send(player) ;
+    }
+}
+ })
+ 
+
+//solution 1 st assinment Consecutive numbers-1 missing
+
+router.get('/sol1', function(req, res) {
+    let array1=[1,2,3,4,6]
+    let sum1 = (array1.length+1)*(array1[0]+array1[array1.length-1])/2
+    let sum2=0
+    for(let a=0;a<array1.length;a++){
+      sum2=sum2+array1[a]
+    }   
+    let a2=sum1-sum2
+      res.send({a2})
+  })
+
+  //solution 2 st assinment Consecutive numbers-2 missing
+  
+  router.get("/sol2" , function(req, res) {
+  
+    let array2=[33,34,35,37,38]
+    let sum1 = (array2.length+1)*(array2[0]+array2[array2.length-1])/2
+    let sum2=0
+    for(let a=0;a<array2.length;a++){
+      sum2=sum2+array2[a]
+    }   
+    let a3=sum1-sum2
+      res.send({a3})
+  })
 
 module.exports = router;
