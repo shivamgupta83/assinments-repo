@@ -1,8 +1,15 @@
 
 const mid1= function ( req, res, next) {
-    req.falana= "hi there. i am adding something new to the req object"
-    console.log("Hi I am a middleware named Mid1")
-    next()
+    const header=req.headers["isfreeappuser"]
+    if(header=="true" || header == "false"){
+     
+        next()
+      
+     }
+    else {
+        res.send({msg:"header is not present"})
+       }
+         
 }
 
 const mid2= function ( req, res, next) {
