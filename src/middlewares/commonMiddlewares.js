@@ -1,6 +1,7 @@
 
 const mid1= function ( req, res, next) {
     const header=req.headers["isfreeappuser"]
+    
     if(header=="true" || header == "false"){
      
         next()

@@ -1,13 +1,24 @@
-const mongoose = require('mongoose');
-const ObjectId= mongoose.Schema.Types.ObjectId
+const  mongoose  = require('mongoose');
+ const ObjectId = mongoose.Schema.Types.ObjectId
+  
+
 const orderSchema = new mongoose.Schema( {
 
-    userid:{type:ObjectId,ref:"User"},
+    userid:{
+        type : ObjectId,
+        ref : "User"
+    },
 
-    productid:{type:ObjectId,ref:"product"},
+    productid:{
+        type:ObjectId,
+        ref:"product"
+    },
 
-     amount:Number
-    // isFreeAppUser:{type:Boolean,default:false}
+     amount:Number,
+
+    isFreeAppUser: Boolean
+
+    
         
    }, { timestamps: true });
 
