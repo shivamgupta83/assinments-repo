@@ -50,9 +50,9 @@ const loginUser = async function (req, res) {
 
 
 const getUserData = async function (req, res) {
-  let token = req.headers["x-auth-token"];
+ 
        //If no token is present in the request header return error. This means the user is not logged in.
-  if (!token) return res.send({ status: false, msg: "token must be present" });
+        
   // If a token is present then decode the token with verify function
   // verify takes two inputs:
   // Input 1 is the token to be decoded
@@ -62,11 +62,9 @@ const getUserData = async function (req, res) {
   // Decoding requires the secret again. 
   // A token can only be decoded successfully if the same secret was used to create(sign) that token.
   // And because this token is only known to the server, it can be assumed that if a token is decoded at server then this token must have been issued by the same server in past.
-  let decodedToken = jwt.verify(token, "functionup-lithium-very-very-secret-key");
-  if (!decodedToken)
-    return res.send({ status: false, msg: "token is invalid" });
+   
       
-    if(req.params.userId!=decodedToken.userId)
+    if(req.params.userId!=req.docoded.userId)
      {return res.send({ status: false, msg: "No such user exists" })}
 
   let userId = req.params.userId;
@@ -83,18 +81,9 @@ const getUserData = async function (req, res) {
 
 //update user flag true
 const updateUser = async function (req, res) {
-  let userId = req.params.userId;
-  let userDetails = await userModel.findById(userId);
-if (!userDetails)
- return res.send({ status: false, msg: "No such user exists" });
-  
-  let token = req.headers["x-auth-token"];
-  if (!token) return res.send({ status: false, msg: "token must be present" });
-  let decodedToken = jwt.verify(token, "functionup-lithium-very-very-secret-key");
-  if (!decodedToken)
-    return res.send({ status: false, msg: "token is invalid" });
+   
        
-    if(req.params.userId!=decodedToken.userId)
+    if(req.params.userId!=req.docoded.userId)
      {return res.send({ status: false, msg: "No such user exists" })}
      
   // Do the same steps here:
@@ -102,7 +91,7 @@ if (!userDetails)
   // Check if the token present is a valid token
   // Return a different error message in both these cases
       
-  let updatedUser = await userModel.findOneAndUpdate({ _id: userId },  {isDeleted: true},{new : true});
+  let updatedUser = await userModel.findOneAndUpdate({ _id: req.params.userId },  {isDeleted: true},{new : true});
   res.send({ status: updatedUser, data: updatedUser });
 };
 
