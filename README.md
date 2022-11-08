@@ -34,6 +34,8 @@ If present, check that the token is valid.
 - Once, all the apis are working fine, move the authentication related code in a middleware called auth.js
 - Add this middleware at route level in the routes where applicale.
 
+linkedin.com/in/junaid-ulla-khan-5b1577229
+
 ```diff
 + Please note that you have to also write the logic for authorisation now so that a logged in user can modify or fetch ONLY their own data.
 + You have to implement authorisation for fetch user details, update user and delete user apis
@@ -42,3 +44,7 @@ If present, check that the token is valid.
 
 ``` 
 
+// "BAD REQUEST" ...400..say if username password dont match etc..or anything generic( any problem in input on user side or any other unhandled problem)
+// "RESOURCE NOT FOUND"...404 //404 page not found...eg. find ("asaijndianud89")...let book =bookModel.findOne({_id:"asaijndianud89"})   if (book){..} else res.status(404).send({})
+// "AUTHENTICATION MISSING"...401..login is required...if(token){...} else { res.status(401)}
+// "NOT AUTHENTICATED OR FORBIDDEN"..403 // if ( token.userId === userId
