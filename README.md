@@ -34,7 +34,7 @@ If present, check that the token is valid.
 - Once, all the apis are working fine, move the authentication related code in a middleware called auth.js
 - Add this middleware at route level in the routes where applicale.
 
-linkedin.com/in/junaid-ulla-khan-5b1577229
+ 
 
 ```diff
 + Please note that you have to also write the logic for authorisation now so that a logged in user can modify or fetch ONLY their own data.

@@ -4,134 +4,145 @@ const userModel = require("../models/userModel");
 
 //1
 const createUser = async function (abcd, xyz) {
-  //You can name the req, res objects anything.
-  //but the first parameter is always the request 
-  //the second parameter is always the response
-  let data = abcd.body;
-  let savedData = await userModel.create(data);
-  console.log(abcd.newAtribute);
-  xyz.send({ msg: savedData });
+
+  try {
+    let data = abcd.body;
+
+    let { emailId, password } = abcd.body
+
+    if (!emailId || !password) {
+      xyz.status(400).send({ msg: "emailid or password is not present" })
+    }
+
+    let savedData = await userModel.create(data);
+
+    xyz.status(201).send({ msg: savedData })
+  }
+  catch (error) {
+    xyz.status(500).send({ msg: error.massage })
+  }
 };
 
 
 //2
 const loginUser = async function (req, res) {
-  let userName = req.body.emailId;
-  let password = req.body.password;
+  try {
+    let userName = req.body.emailId;
+    let password = req.body.password;
 
-  if (!userName || !password) {
-    return res.send({
-      status: false,
-      msg: "username or the password is not present",
-    });
+    if (!userName || !password) {
+      return res.status(400).send({
+        status: false,
+        msg: "username or the password is not present",
+      });
+    }
+
+    let user = await userModel.findOne({ emailId: userName, password: password });
+    if (!user)
+      return res.status(500).send({
+        status: false,
+        msg: "username or the password is not corerct",
+      });
+
+
+    let token = jwt.sign(
+      {
+        userId: user._id,
+        batch: "lithium",
+        organisation: "FUnctionUp",
+      },
+      "functionup-lithium"
+    );
+    res.setHeader("x-auth-token", token);
+    res.status(200).send({ status: true, data: token })
   }
-
-  let user = await userModel.findOne({ emailId: userName, password: password });
-  if (!user)
-    return res.send({
-      status: false,
-      msg: "username or the password is not corerct",
-    });
-
-  // Once the login is successful, create the jwt token with sign function
-  // Sign function has 2 inputs:
-  // Input 1 is the payload or the object containing data to be set in token
-  // The decision about what data to put in token depends on the business requirement
-  // Input 2 is the secret
-  // The same secret will be used to decode tokens
-  let token = jwt.sign(
-    {
-      userId: user._id ,
-      batch: "lithium",
-      organisation: "FUnctionUp",
-    },
-    "functionup-lithium"
-  );
-  res.setHeader("x-auth-token", token);
-  res.send({ status: true, data: token });
+  catch (error) {
+    res.status(500).send({ msg: error.massage })
+  }
 };
 
 
 //3
 const getUserData = async function (req, res) {
- 
 
-  //If no token is present in the request header return error
- 
+  try {
+    let userId = req.params.userId;
+    let userDetails = await userModel.findById(userId);
+    if (!userDetails)
+      return res.status(401).send({ status: false, msg: "No such user exists" });
 
-  // If a token is present then decode the token with verify function
-  // verify takes two inputs:
-  // Input 1 is the token to be decoded
-  // Input 2 is the same secret with which the token was generated
-  // Check the value of the decoded token yourself
-  
-  let userId = req.params.userId;
-  let userDetails = await userModel.findById(userId);
-  if (!userDetails)
-    return res.send({ status: false, msg: "No such user exists" });
+    return res.status(200).send({ status: true, data: userDetails })
+  }
+  catch (error) {
+    res.status(500).send({ msg: error.massage })
+  }
 
-  return res.send({ status: true, data: userDetails });
 };
 
 
 //4
 const postMessage = async function (req, res) {
-  let message = req.body.message
-  // Check if the token is present
-  // Check if the token present is a valid token
-  // Return a different error message in both these cases
-   
- 
-  //userId for which the request is made. In this case message to be posted.
-  
-  //userId for the logged-in user
-  
+  try {
+    let message = req.body.message
+    if (!message) return res.status(401).send({ status: false, msg: 'havent message' })
 
-  //userId comparision to check if the logged-in user is requesting for their own data
-   
-  let user = await userModel.findById(req.params.userId)
-  if (!user) return res.send({ status: false, msg: 'No such user exists' })
+    let user = await userModel.findById(req.params.userId)
+    if (!user) return res.status(500).send({ status: false, msg: 'No such user exists' })
 
-  let updatedPosts = user.posts
-  //add the message to user's posts
-  updatedPosts.push(message)
-  let updatedUser = await userModel.findOneAndUpdate({ _id: user._id }, { posts: updatedPosts }, { new: true })
+    let updatedPosts = user.posts
+    //add the message to user's posts
+    updatedPosts.push(message)
+    let updatedUser = await userModel.findOneAndUpdate({ _id: user._id }, { posts: updatedPosts }, { new: true })
 
-  //return the updated user document
-  return res.send({ status: true, data: updatedUser })
+    //return the updated user document
+    return res.status(200).send({ status: true, data: updatedUser })
+  }
+  catch (error) {
+    return res.status(500).send({ msg: error.massage })
+  }
 }
 
 //5
 const updateUser = async function (req, res) {
-  // Do the same steps here:
-  // Check if the token is present
-  // Check if the token present is a valid token
-  // Return a different error message in both these cases
 
-  let userId = req.params.userId;
-  let user = await userModel.findById(userId);
-  //Return an error if no user with the given id exists in the db
-  if (!user) {
-    return res.send("No such user exists");
+  try {
+    if (!req.body) {
+      return res.status(401).send("there is no body");
+    }
+
+    let userId = req.params.userId;
+    let user = await userModel.findById(userId);
+
+    if (!user) {
+      return res.status(500).send("No such user exists");
+    }
+
+    let userData = req.body;  //in user data is { "posts": "hii01"  }
+    let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, userData, { new: true });
+    res.status(201).send({ status: updatedUser })
   }
-
-  let userData = req.body;
-  let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, userData,{new:true});
-  res.send({ status: updatedUser });
+  catch (error) {
+    res.status(500).send({ msg: error.massage })
+  }
 };
 
 
 // delete user
 const deleteuser = async function (req, res) {
-  
-  let userId = req.params.userId;
-  let user = await userModel.findById(userId);
-  //Return an error if no user with the given id exists in the db
-  if (!user) {
-    return res.send("No such user exists");
+
+  try {
+    let userId = req.params.userId;
+    let user = await userModel.findById(userId);
+    //Return an error if no user with the given id exists in the db
+    if (!user) {
+      return res.status(500).send("No such user exists");
+    }
+    let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, { isDeleted: true }, { new: true });
+    res.status(201).send({ status: updatedUser })
   }
-    let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, {isDeleted:true},{new:true});
-  res.send({ status: updatedUser });
+  catch (error) {
+    res.status(500).send({ msg: error.massage })
+  }
 };
 
 module.exports.createUser = createUser;
