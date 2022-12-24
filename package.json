@@ -6,7 +6,7 @@
     "uuid": "^9.0.0"
   },
   "name": "backend-engneering-test",
-  "description": "hello my name is bhupendra",
+  "description": "hello my name is shivam",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -15,12 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bhupendra2001/Backend-Engneering-Test.git"
+    "url": "git+https://github.com/shivamgupta83/assinments-repo.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Bhupendra2001/Backend-Engneering-Test/issues"
+    "url": "https://github.com/shivamgupta83/assinments-repo.git"
   },
-  "homepage": "https://github.com/Bhupendra2001/Backend-Engneering-Test#readme"
+  "homepage": "//github.com/shivamgupta83/assinments-repo.git"
 }
