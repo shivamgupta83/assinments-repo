@@ -4,12 +4,12 @@ const route  = require("./router/router")
 const {default : mongoose} = require("mongoose")
 const app = express()
  
-mongoose.set('strictQuery', true);
+
 app.use(bodyParser.json())
  
 
-
-mongoose.connect("mongodb+srv://bhupendra_:1B97GiRnjBfdXTL4@cluster5.fjlkdvr.mongodb.net/backend-engneering-test",{
+mongoose.set('strictQuery', true);
+mongoose.connect("mongodb+srv://123:1234@cluster0.pf4v08v.mongodb.net/backend-engineering-project",{
     useNewUrlparser : true
 })
 .then(()=> console.log("mongoDb is connected"))
