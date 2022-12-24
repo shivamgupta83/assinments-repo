@@ -1,13 +1,8 @@
 const constomerModel=require("../models/customerModel")
 const { v4: uuidv4 } = require('uuid');
-const {validate : uuidValidate } =require('uuid');
-const { version : uuidVersion }  = require('uuid');
  const { isValidName, isValidMobile,  isValidDob, isValidEmail, validUUID } = require("../validatare");
-const { findOne } = require("../models/customerModel");
 
-function uuidValidateV4(uuid) {
-    return uuidValidate(uuid) && uuidVersion(uuid) === 4;
-  }
+
 
 exports.createCustomer =async(req,res)=>{
 try{ 
